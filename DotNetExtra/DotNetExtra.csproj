@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp1.0;net45;netstandard1.0</TargetFrameworks>
+    <RootNamespace>DotNetExtra</RootNamespace>
+    <AssemblyName>DotNetExtra</AssemblyName>
+    <Authors>inasync</Authors>
+    <Description></Description>
+    <PackageProjectUrl>https://github.com/in-async/DotNetExtra</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/in-async/DotNetExtra/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags></PackageTags>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+</Project>
