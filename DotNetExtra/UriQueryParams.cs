@@ -17,7 +17,7 @@ namespace DotNetExtra {
         /// </summary>
         public UriQueryParams() {
             _params = new List<KeyValuePair<string, string>>();
-            _keyIndexes = new Dictionary<string, int>();
+            _keyIndexes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -33,12 +33,12 @@ namespace DotNetExtra {
                 .Select(p => {
                     var pairs = p.Split(new[] { '=' }, 2);
                     var key = Uri.UnescapeDataString(pairs[0]);
-                    var value = (pairs[1] == null) ? null : Uri.UnescapeDataString(pairs[1]);
+                    var value = (pairs.Length == 1 || pairs[1] == null) ? "" : Uri.UnescapeDataString(pairs[1]);
                     return new KeyValuePair<string, string>(key, value);
                 })
                 .ToList();
 
-            _keyIndexes = new Dictionary<string, int>(_params.Count);
+            _keyIndexes = new Dictionary<string, int>(_params.Count, StringComparer.OrdinalIgnoreCase);
             for (var i = 0; i < _params.Count; i++) {
                 _keyIndexes.Add(_params[i].Key, i);
             }
@@ -54,11 +54,12 @@ namespace DotNetExtra {
         public string this[string key] {
             get => _params[_keyIndexes[key]].Value;
             set {
+                var val = value ?? "";
                 if (!_keyIndexes.TryGetValue(key, out var index)) {
-                    Add(key, value);
+                    Add(key, val);
                 }
                 else {
-                    _params[index] = new KeyValuePair<string, string>(key, value);
+                    _params[index] = new KeyValuePair<string, string>(key, val);
                 }
             }
         }
@@ -88,9 +89,9 @@ namespace DotNetExtra {
         public override string ToString() {
             return string.Join("&", _params.Select(p => {
                 var key = Uri.EscapeDataString(p.Key);
-                var value = (p.Value == null) ? null : Uri.EscapeDataString(p.Value);
-
-                return key + '=' + value;
+                return p.Value == "" ?
+                    key + '=' :
+                    key + '=' + Uri.EscapeDataString(p.Value);
             }));
         }
 
@@ -110,15 +111,24 @@ namespace DotNetExtra {
         /// <param name="value">追加するクエリパラメーターの値。</param>
         /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">同じ名前を持つクエリパラメーターが既に存在します。</exception>
-        public void Add(string key, string value) => Add(new KeyValuePair<string, string>(key, value));
+        public void Add(string key, string value) {
+            if (key == null) { throw new ArgumentNullException(nameof(key)); }
+
+            _keyIndexes.Add(key, _params.Count);
+            _params.Add(new KeyValuePair<string, string>(key, value ?? ""));
+        }
 
         /// <summary>
         /// クエリパラメーターを追加します。
         /// </summary>
         /// <param name="item">追加するクエリパラメーター。</param>
-        /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentException">同じ名前を持つクエリパラメーターが既に存在します。</exception>
-        public void Add(KeyValuePair<string, string> item) {
+        /// <exception cref="ArgumentException"><paramref name="item"/> の <see cref="KeyValuePair{TKey, TValue}.Key"/> が <c>null</c>、または同じ名前を持つクエリパラメーターが既に存在します。</exception>
+        void ICollection<KeyValuePair<string, string>>.Add(KeyValuePair<string, string> item) {
+            if (item.Key == null) { throw new ArgumentException("Key プロパティが null です。", nameof(item)); }
+            if (item.Value == null) {
+                item = new KeyValuePair<string, string>(item.Key, "");
+            }
+
             _keyIndexes.Add(item.Key, _params.Count);
             _params.Add(item);
         }
@@ -142,9 +152,9 @@ namespace DotNetExtra {
         /// </summary>
         /// <param name="item">削除するクエリパラメーター。</param>
         /// <returns>クエリパラメーターが見つかり、正常に削除された場合は <c>true</c>。それ以外なら <c>false</c>。</returns>
-        public bool Remove(KeyValuePair<string, string> item) {
+        bool ICollection<KeyValuePair<string, string>>.Remove(KeyValuePair<string, string> item) {
+            if (item.Key == null) { return false; }
             if (!_params.Remove(item)) { return false; }
-
             _keyIndexes.Remove(item.Key);
             return true;
         }
@@ -162,7 +172,7 @@ namespace DotNetExtra {
         /// </summary>
         /// <param name="item"><see cref="UriQueryParams"/> 内で検索されるクエリパラメーター。</param>
         /// <returns><paramref name="item"/> が <see cref="UriQueryParams"/> に格納されている場合は <c>true</c>。それ以外の場合は <c>false</c>。</returns>
-        public bool Contains(KeyValuePair<string, string> item) => _params.Contains(item);
+        bool ICollection<KeyValuePair<string, string>>.Contains(KeyValuePair<string, string> item) => _params.Contains(item);
 
         /// <summary>
         /// 指定した名前を持つクエリパラメーターが <see cref="UriQueryParams"/> に格納されているかどうかを判断します。
@@ -189,7 +199,7 @@ namespace DotNetExtra {
             return true;
         }
 
-        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => _params.CopyTo(array, arrayIndex);
+        void ICollection<KeyValuePair<string, string>>.CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => _params.CopyTo(array, arrayIndex);
 
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => _params.GetEnumerator();
 

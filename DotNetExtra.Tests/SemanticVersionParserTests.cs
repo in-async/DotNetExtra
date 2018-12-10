@@ -49,6 +49,9 @@ namespace DotNetExtra.Tests {
 
                 (50, "1.0.4:beta"                , null                                                         , (Type)typeof(FormatException)),
                 (51, "1.0.9.6"                   , null                                                         , (Type)typeof(FormatException)),
+                (52, "a.0.0"                     , null                                                         , (Type)typeof(FormatException)),
+                (53, "1.a.0"                     , null                                                         , (Type)typeof(FormatException)),
+                (54, "1.0.a"                     , null                                                         , (Type)typeof(FormatException)),
             };
         }
 
@@ -94,6 +97,9 @@ namespace DotNetExtra.Tests {
 
                 (50, "1.0.4:beta"                , (false, null                                                         ), (Type)null),
                 (51, "1.0.9.6"                   , (false, null                                                         ), (Type)null),
+                (52, "a.0.0"                     , (false, null                                                         ), (Type)null),
+                (53, "1.a.0"                     , (false, null                                                         ), (Type)null),
+                (54, "1.0.a"                     , (false, null                                                         ), (Type)null),
             };
         }
     }

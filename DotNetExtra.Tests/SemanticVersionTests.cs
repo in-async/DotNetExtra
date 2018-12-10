@@ -8,6 +8,11 @@ namespace DotNetExtra.Tests {
     public class SemanticVersionTests {
 
         [TestMethod]
+        public void Empty() {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
         public void SemanticVersion_BBB() {
             foreach (var item in TestCases()) {
                 new TestCaseRunner($"No.{item.testNumber}")
