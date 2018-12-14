@@ -191,7 +191,7 @@ namespace DotNetExtra.Tests {
             }
 
             (int testNumber, UriQueryParams query, KeyValuePair<string, string> item, (bool result, string query) expected, Type expectedExceptionType)[] TestCases() => new[] {
-                (10, new UriQueryParams()                                         , new KeyValuePair<string, string>(null, ""  ), (false, ""          ), (Type)null),
+                (10, new UriQueryParams()                                         , new KeyValuePair<string, string>(null, ""  ), default              , (Type)typeof(ArgumentNullException)),
                 (11, new UriQueryParams()                                         , new KeyValuePair<string, string>("1" , ""  ), (false, ""          ), (Type)null),
                 (20, new UriQueryParams(new Uri("http://example.com/?1="))        , new KeyValuePair<string, string>("1" , ""  ), (true , ""          ), (Type)null),
                 (21, new UriQueryParams(new Uri("http://example.com/?1="))        , new KeyValuePair<string, string>("1" , null), (false, "1="        ), (Type)null),
@@ -240,7 +240,7 @@ namespace DotNetExtra.Tests {
             }
 
             (int testNumber, UriQueryParams query, KeyValuePair<string, string> item, bool expected, Type expectedExceptionType)[] TestCases() => new[] {
-                ( 0, new UriQueryParams()                                         , default(KeyValuePair<string, string>)       , false, (Type)null),
+                ( 0, new UriQueryParams()                                         , default                                     , false, (Type)typeof(ArgumentNullException)),
                 (10, new UriQueryParams()                                         , new KeyValuePair<string, string>("1" , null), false, (Type)null),
                 (20, new UriQueryParams(new Uri("http://example.com/?1="))        , new KeyValuePair<string, string>("1" , null), false, (Type)null),
                 (21, new UriQueryParams(new Uri("http://example.com/?1="))        , new KeyValuePair<string, string>("1" , ""  ), true , (Type)null),
@@ -311,7 +311,7 @@ namespace DotNetExtra.Tests {
             (int testNumber, UriQueryParams query, KeyValuePair<string, string>[] array, int arrayIndex, KeyValuePair<string, string>[] expected, Type expectedExceptionType)[] TestCases() => new[] {
                 ( 0, new UriQueryParams()                                         , null     , 0 , null                                   , (Type)typeof(ArgumentNullException)),
                 ( 1, new UriQueryParams()                                         , ItemsB(0), -1, null                                   , (Type)typeof(ArgumentOutOfRangeException)),
-                ( 2, new UriQueryParams()                                         , ItemsB(0), 1 , null                                   , (Type)typeof(ArgumentException)),
+                ( 2, new UriQueryParams()                                         , ItemsB(0), 1 , null                                   , (Type)typeof(ArgumentOutOfRangeException)),
                 (10, new UriQueryParams()                                         , ItemsB(0), 0 , ItemsN()                               , (Type)null),
                 (11, new UriQueryParams()                                         , ItemsB(1), 0 , ItemsB(1)                              , (Type)null),
                 (20, new UriQueryParams(new Uri("http://example.com/?1="))        , ItemsB(0), 0 , null                                   , (Type)typeof(ArgumentException)),
@@ -345,11 +345,11 @@ namespace DotNetExtra.Tests {
             (int testNumber, UriQueryParams query, KeyValuePair<string, string>[] expected, Type expectedExceptionType)[] TestCases() => new[] {
                 (10, new UriQueryParams(new Uri("http://example.com/"))                    , Items()                                   , (Type)null),
                 (11, new UriQueryParams(new Uri("http://example.com/?"))                   , Items()                                   , (Type)null),
-                (12, new UriQueryParams(new Uri("http://example.com/?foo"))                , Items(("foo",""))                         , (Type)null),
+                (12, new UriQueryParams(new Uri("http://example.com/?foo"))                , Items(("foo",null))                       , (Type)null),
                 (13, new UriQueryParams(new Uri("http://example.com/?foo="))               , Items(("foo",""))                         , (Type)null),
                 (14, new UriQueryParams(new Uri("http://example.com/?foo=bar"))            , Items(("foo","bar"))                      , (Type)null),
                 (15, new UriQueryParams(new Uri("http://example.com/?foo=bar&"))           , Items(("foo","bar"))                      , (Type)null),
-                (16, new UriQueryParams(new Uri("http://example.com/?foo=bar&%3f"))        , Items(("foo","bar"), ("?",""))            , (Type)null),
+                (16, new UriQueryParams(new Uri("http://example.com/?foo=bar&%3f"))        , Items(("foo","bar"), ("?",null))          , (Type)null),
                 (17, new UriQueryParams(new Uri("http://example.com/?foo=bar&%3f="))       , Items(("foo","bar"), ("?",""))            , (Type)null),
                 (18, new UriQueryParams(new Uri("http://example.com/?foo=bar&%3f=%26"))    , Items(("foo","bar"), ("?","&"))           , (Type)null),
                 (19, new UriQueryParams(new Uri("http://example.com/?foo=bar&%3f=%26&a=b")), Items(("foo","bar"), ("?","&"), ("a","b")), (Type)null),
