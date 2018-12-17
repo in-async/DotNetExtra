@@ -5,13 +5,25 @@ using System.Linq;
 
 namespace DotNetExtra {
 
+    /// <summary>
+    /// エントリー順に順序維持される辞書クラス。
+    /// </summary>
+    /// <typeparam name="TKey">辞書のキーの型。</typeparam>
+    /// <typeparam name="TValue">辞書の値の型。</typeparam>
     public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue> {
         private readonly Dictionary<TKey, TValue> _params;
         private readonly List<TKey> _keys;
 
+        /// <summary>
+        /// 空の <see cref="OrderedDictionary{TKey, TValue}"/> を作成します。
+        /// </summary>
         public OrderedDictionary() : this(null) {
         }
 
+        /// <summary>
+        /// 指定されたキー比較子を使用する <see cref="OrderedDictionary{TKey, TValue}"/> を作成します。
+        /// </summary>
+        /// <param name="comparer">辞書キーの比較に使用される <see cref="IEqualityComparer{T}"/>。</param>
         public OrderedDictionary(IEqualityComparer<TKey> comparer) {
             if (comparer == null) {
                 comparer = EqualityComparer<TKey>.Default;
@@ -44,6 +56,11 @@ namespace DotNetExtra {
         public int Count => _keys.Count;
 
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
+
+        /// <summary>
+        /// 辞書キーの比較に使用される <see cref="IEqualityComparer{T}"/>。
+        /// </summary>
+        public IEqualityComparer<TKey> Comparer { get => _params.Comparer; }
 
         public void Add(TKey key, TValue value) {
             if (key == null) { throw new ArgumentNullException(nameof(key)); }
