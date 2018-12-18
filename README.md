@@ -5,7 +5,6 @@
 
 - System
 - System.Collections.Generic
-- System.Linq
 
 
 ## Target Frameworks
@@ -15,15 +14,16 @@
 
 
 ## APIs
-| Type                  | Description |
-| ---                   | ---         |
-| Base64Url             | [base64url](https://tools.ietf.org/html/rfc4648#page-7) のエンコード及びデコードを行うクラス。 |
-| Binary                | `byte` 配列と 16 進文字列の相互変換を行うクラス。 |
-| DateTimeExtensions    | `DateTime` の拡張クラス。 |
-| EmptyArray            | 空配列をシングルトンに管理するクラス。 `Array.Empty<T>` が無い環境への補完です。 |
-| SemanticVersion       | [Semantic Versioning 2.0.0](https://semver.org/) を表現するクラス。 |
-| SemanticVersionParser | 文字列を *Semantic Version 2.0.0* として解釈するパーサー。 |
-| UriQueryParams        | URI クエリのクエリパラメーターを順序維持して管理するコレクションクラス。 |
+| Type                           | Description |
+| ---                            | ---         |
+| Base64Url                      | [base64url](https://tools.ietf.org/html/rfc4648#page-7) のエンコード及びデコードを行うクラス。 |
+| Binary                         | `byte` 配列と 16 進文字列の相互変換を行うクラス。 |
+| DateTimeExtensions             | `DateTime` の拡張クラス。 |
+| EmptyArray                     | 空配列をシングルトンに管理するクラス。 `Array.Empty<T>` が無い環境への補完です。 |
+| OrderedDictionary<TKey,TValue> | エントリー順に順序維持される辞書クラス。 |
+| SemanticVersion                | [Semantic Versioning 2.0.0](https://semver.org/) を表現するクラス。 |
+| SemanticVersionParser          | 文字列を *Semantic Version 2.0.0* として解釈するパーサー。 |
+| UriQueryParams                 | URI クエリのクエリパラメーターを順序維持して管理するコレクションクラス。 |
 
 
 ## Licence
