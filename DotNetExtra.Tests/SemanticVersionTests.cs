@@ -9,7 +9,17 @@ namespace DotNetExtra.Tests {
 
         [TestMethod]
         public void Empty() {
-            throw new NotImplementedException();
+            new TestCaseRunner()
+                .Run(() => SemanticVersion.Empty)
+                .Verify((actual, desc) => {
+                    Assert.AreEqual(0, actual.Major, desc);
+                    Assert.AreEqual(0, actual.Minor, desc);
+                    Assert.AreEqual(0, actual.Patch, desc);
+                    Assert.AreEqual(null, actual.PreReleaseId, desc);
+                    Assert.AreEqual(null, actual.BuildMetadata, desc);
+                    Assert.AreEqual("0.0.0", actual.ToString(), desc);
+                    Assert.AreEqual(new SemanticVersion(0, 0, 0, null, null), actual, desc);
+                }, (Type)null);
         }
 
         [TestMethod]
