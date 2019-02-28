@@ -8,8 +8,8 @@
 
 
 ## Target Frameworks
+- .NET Standard 2.0+
 - .NET Standard 1.0+
-- .NET Core 1.0+
 - .NET Framework 4.5+
 
 
