@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace DotNetExtra {
+namespace Inasync {
 
     /// <summary>
     /// <see cref="byte"/> 配列と 16 進文字列の相互変換を行うクラス。
@@ -38,7 +38,7 @@ namespace DotNetExtra {
         /// <returns>変換後の <see cref="byte"/> 配列。</returns>
         /// <exception cref="ArgumentNullException"><paramref name="hexString"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="hexString"/> の文字数が奇数の場合に投げられます。</exception>
-        public static byte[] FromHexString(string hexString) {
+        public static byte[] Parse(string hexString) {
             if (hexString == null) { throw new ArgumentNullException(nameof(hexString)); }
             if (hexString.Length % 2 == 1) { throw new ArgumentOutOfRangeException(nameof(hexString), hexString, "16進文字列の長さが無効です。"); }
 

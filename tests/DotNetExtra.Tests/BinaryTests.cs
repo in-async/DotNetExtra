@@ -2,7 +2,7 @@
 using Inasync;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DotNetExtra.Tests {
+namespace Inasync.Tests {
 
     [TestClass]
     public class BinaryTests {
@@ -31,10 +31,10 @@ namespace DotNetExtra.Tests {
         }
 
         [TestMethod]
-        public void FromHexString() {
+        public void Parse() {
             foreach (var item in TestCases()) {
                 new TestCaseRunner($"No.{item.testNumber}")
-                    .Run(() => Binary.FromHexString(item.hexString))
+                    .Run(() => Binary.Parse(item.hexString))
                     .Verify(item.expected, item.expectedExceptionType);
             }
 

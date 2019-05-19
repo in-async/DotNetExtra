@@ -2,7 +2,7 @@
 using Inasync;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DotNetExtra.Tests {
+namespace Inasync.Tests {
 
     [TestClass]
     public class Base64UrlTests {

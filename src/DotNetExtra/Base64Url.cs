@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotNetExtra {
+namespace Inasync {
 
     /// <summary>
     /// base64url のエンコード及びデコードを行うクラス。
