@@ -12,42 +12,45 @@ namespace DotNetExtra {
         /// バージョン文字列を <see cref="SemanticVersion"/> に変換します。
         /// </summary>
         /// <param name="value">バージョン文字列。</param>
-        /// <param name="result"><see cref="SemanticVersion"/> のインスタンス。</param>
-        /// <exception cref="ArgumentNullException"><paramref name="value"/> が <c>null</c> の場合。</exception>
-        /// <exception cref="FormatException"><paramref name="value"/> の解釈に失敗した場合。</exception>
-        SemanticVersion Parse(string value);
-
-        /// <summary>
-        /// バージョン文字列を <see cref="SemanticVersion"/> に変換します。
-        /// </summary>
-        /// <param name="value">バージョン文字列。</param>
         /// <param name="result"><see cref="SemanticVersion"/> のインスタンス。変換に失敗した場合は <c>null</c>。</param>
         /// <returns>変換に成功すれば <c>true</c>、それ以外なら <c>false</c>。</returns>
         bool TryParse(string value, out SemanticVersion result);
     }
 
-    public abstract class SemanticVersionParserBase : ISemanticVersionParser {
+    /// <summary>
+    /// インターフェースのデフォルト実装代わりの拡張メソッド クラス。
+    /// </summary>
+    public static class SemanticVersionParserExtensions {
 
-        public SemanticVersion Parse(string value) {
+        /// <summary>
+        /// バージョン文字列を <see cref="SemanticVersion"/> に変換します。
+        /// </summary>
+        /// <param name="parser">パーサー。</param>
+        /// <param name="value">変換対象のバージョン文字列。</param>
+        /// <returns>変換された <see cref="SemanticVersion"/>。常に非 <c>null</c>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+        /// <exception cref="FormatException"><paramref name="value"/> の解析に失敗。</exception>
+        public static SemanticVersion Parse(this ISemanticVersionParser parser, string value) {
             if (value == null) { throw new ArgumentNullException(nameof(value)); }
 
-            return TryParse(value, out var result) ? result : throw new FormatException();
+            return parser.TryParse(value, out var result) ? result : throw new FormatException("バージョン文字列の解析に失敗しました。");
         }
-
-        public abstract bool TryParse(string value, out SemanticVersion result);
     }
 
     /// <summary>
     /// <see cref="ISemanticVersionParser"/> のリファレンス実装。
     /// </summary>
-    public class SemanticVersionParser : SemanticVersionParserBase {
+    public class SemanticVersionParser : ISemanticVersionParser {
         public static readonly SemanticVersionParser Default = new SemanticVersionParser();
 
         private static readonly char[] s_versionSeparators = new[] { SemanticVersion.VersionSeparator };
         private static readonly char[] s_preReleaseIdSeparators = new[] { SemanticVersion.PreReleaseIdSeparator };
         private static readonly char[] s_buildMetadataSeparators = new[] { SemanticVersion.BuildMetadataSeparator };
 
-        public override bool TryParse(string value, out SemanticVersion result) {
+        /// <summary>
+        /// <see cref="ISemanticVersionParser.TryParse(string, out SemanticVersion)"/> の実装。
+        /// </summary>
+        public bool TryParse(string value, out SemanticVersion result) {
             result = InternalTryParse();
             return (result != null);
 
