@@ -18,6 +18,8 @@
 | ---                            | ---         |
 | Base64Url                      | [base64url](https://tools.ietf.org/html/rfc4648#page-7) のエンコード及びデコードを行うクラス。 |
 | Binary                         | `byte` 配列と 16 進文字列の相互変換を行うクラス。 |
+| SemanticVersion                | [Semantic Versioning 2.0.0](https://semver.org/) を表現するクラス。 |
+| SemanticVersionParser          | 文字列を *Semantic Version 2.0.0* として解釈するパーサー。 |
 
 
 ## Licence
