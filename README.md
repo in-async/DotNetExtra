@@ -18,6 +18,7 @@
 | ---                            | ---         |
 | Base64Url                      | [base64url](https://tools.ietf.org/html/rfc4648#page-7) のエンコード及びデコードを行うクラス。 |
 | Binary                         | `byte` 配列と 16 進文字列の相互変換を行うクラス。 |
+| DateTimeExtensions             | `DateTime` の拡張クラス。 |
 
 
 ## Licence
