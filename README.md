@@ -19,6 +19,7 @@
 | Base64Url                      | [base64url](https://tools.ietf.org/html/rfc4648#page-7) のエンコード及びデコードを行うクラス。 |
 | Binary                         | `byte` 配列と 16 進文字列の相互変換を行うクラス。 |
 | OrderedDictionary<TKey,TValue> | エントリー順に順序維持される辞書クラス。 |
+| UriQueryParams                 | URI クエリのクエリパラメーターを順序維持して管理するコレクションクラス。 |
 
 
 ## Licence
