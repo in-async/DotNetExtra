@@ -1,6 +1,6 @@
 # .NET Extra
 [![Build status](https://ci.appveyor.com/api/projects/status/18guum32xluunws0/branch/master?svg=true)](https://ci.appveyor.com/project/inasync/dotnetextra/branch/master)
-[![NuGet](https://img.shields.io/nuget/v/DotNetExtra.MSTest.svg)](https://www.nuget.org/packages/DotNetExtra.MSTest/)
+[![NuGet](https://img.shields.io/nuget/v/Inasync.DotNetExtra.svg)](https://www.nuget.org/packages/Inasync.DotNetExtra/)
 
 ***.NET Extra*** は、特定のドメインに寄らないベースクラスライブラリの薄い拡張です。
 
