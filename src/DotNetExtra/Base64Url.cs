@@ -32,6 +32,19 @@ namespace Inasync {
         public static byte[] Decode(string encoded) {
             if (encoded == null) { throw new ArgumentNullException(nameof(encoded)); }
 
+            if (!TryDecode(encoded, out var result)) { throw new FormatException("base64url でエンコードされた文字列ではありません。"); }
+            return result;
+        }
+
+        /// <summary>
+        /// base64url でエンコードされた文字列をデコードします。
+        /// </summary>
+        /// <param name="encoded">base64url エンコードされた文字列。</param>
+        /// <param name="result">デコード後の <see cref="byte"/> 配列。失敗した場合は <c>null</c>。</param>
+        /// <returns>デコードに成功した場合は <c>true</c>、それ以外は <c>false</c>。</returns>
+        public static bool TryDecode(string encoded, out byte[] result) {
+            if (encoded == null) { goto Failure; }
+
             var paddingLen = encoded.Length % 4;
             if (paddingLen != 0) {
                 paddingLen = 4 - paddingLen;
@@ -41,7 +54,16 @@ namespace Inasync {
                 .Replace('-', '+')
                 .Replace('_', '/')
                 + new string('=', paddingLen);
-            return Convert.FromBase64String(base64Str);
+
+            try {
+                result = Convert.FromBase64String(base64Str);
+                return true;
+            }
+            catch (FormatException) { goto Failure; }
+
+Failure:
+            result = null;
+            return false;
         }
     }
 }

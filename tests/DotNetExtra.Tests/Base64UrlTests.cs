@@ -42,6 +42,27 @@ namespace Inasync.Tests {
             };
         }
 
+        [TestMethod]
+        public void TryDecode() {
+            Action TestCase(int testNumber, string encoded, (bool, byte[]) expected) => () => {
+                new TestCaseRunner($"No.{testNumber}")
+                    .Run(() => (Base64Url.TryDecode(encoded, out var result), result))
+                    .Verify((actual, desc) => {
+                        Assert.AreEqual(expected.Item1, actual.Item1, desc);
+                        CollectionAssert.AreEqual(expected.Item2, actual.Item2, desc);
+                    }, (Type)null);
+            };
+
+            new[] {
+                TestCase( 0, null , (false, null)),
+                TestCase( 1, "@"  , (false, null)),
+                TestCase(10, ""   , (true , Bin())),
+                TestCase(11, "AA" , (true , Bin(0))),
+                TestCase(12, "-g" , (true , Bin(250))),
+                TestCase(13, "_wA", (true , Bin(255, 0))),
+            }.Run();
+        }
+
         #region Helper
 
         private static byte[] Bin(params byte[] bin) => bin;
