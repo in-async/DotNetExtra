@@ -10,12 +10,20 @@ Frequency=3320380 Hz, Resolution=301.1703 ns, Timer=TSC
 
 
 ```
-| Method |  Job | Runtime | Categories |     Mean |     Error |    StdDev | Ratio |  Gen 0 | Gen 1 | Gen 2 | Allocated |
-|------- |----- |-------- |----------- |---------:|----------:|----------:|------:|-------:|------:|------:|----------:|
-| Encode |  Clr |     Clr |     Encode | 4.899 us | 0.0685 us | 0.0641 us |  1.00 | 3.5172 |     - |     - |  10.83 KB |
-|        |      |         |            |          |           |           |       |        |       |       |           |
-| Decode |  Clr |     Clr |     Decode | 6.894 us | 0.0996 us | 0.0932 us |  1.00 | 2.9755 |     - |     - |   9.15 KB |
-|        |      |         |            |          |           |           |       |        |       |       |           |
-| Encode | Core |    Core |     Encode | 4.668 us | 0.0482 us | 0.0427 us |  1.00 | 3.5172 |     - |     - |  10.82 KB |
-|        |      |         |            |          |           |           |       |        |       |       |           |
-| Decode | Core |    Core |     Decode | 5.497 us | 0.0985 us | 0.0921 us |  1.00 | 2.9755 |     - |     - |   9.15 KB |
+|   Method |  Job | Runtime | Categories |     Mean |     Error |    StdDev | Ratio |  Gen 0 | Gen 1 | Gen 2 | Allocated |
+|--------- |----- |-------- |----------- |---------:|----------:|----------:|------:|-------:|------:|------:|----------:|
+| EncodeV1 |  Clr |     Clr |     Encode | 4.623 us | 0.0236 us | 0.0221 us |  1.00 | 3.5172 |     - |     - |  10.83 KB |
+| EncodeV2 |  Clr |     Clr |     Encode | 5.547 us | 0.0579 us | 0.0542 us |  1.20 | 2.6474 |     - |     - |   8.14 KB |
+|   Encode |  Clr |     Clr |     Encode | 2.345 us | 0.0095 us | 0.0089 us |  0.51 | 1.7509 |     - |     - |   5.39 KB |
+|          |      |         |            |          |           |           |       |        |       |       |           |
+| DecodeV1 |  Clr |     Clr |     Decode | 6.936 us | 0.0350 us | 0.0327 us |  1.00 | 2.9755 |     - |     - |   9.15 KB |
+| DecodeV2 |  Clr |     Clr |     Decode | 7.261 us | 0.0466 us | 0.0436 us |  1.05 | 2.9907 |     - |     - |   9.21 KB |
+|   Decode |  Clr |     Clr |     Decode | 3.132 us | 0.0110 us | 0.0103 us |  0.45 | 0.3395 |     - |     - |   1.05 KB |
+|          |      |         |            |          |           |           |       |        |       |       |           |
+| EncodeV1 | Core |    Core |     Encode | 4.547 us | 0.0213 us | 0.0199 us |  1.00 | 3.5172 |     - |     - |  10.82 KB |
+| EncodeV2 | Core |    Core |     Encode | 5.341 us | 0.0166 us | 0.0155 us |  1.17 | 2.6474 |     - |     - |   8.14 KB |
+|   Encode | Core |    Core |     Encode | 2.447 us | 0.0140 us | 0.0131 us |  0.54 | 1.7509 |     - |     - |   5.39 KB |
+|          |      |         |            |          |           |           |       |        |       |       |           |
+| DecodeV1 | Core |    Core |     Decode | 5.648 us | 0.0229 us | 0.0214 us |  1.00 | 2.9755 |     - |     - |   9.15 KB |
+| DecodeV2 | Core |    Core |     Decode | 6.188 us | 0.0243 us | 0.0227 us |  1.10 | 2.9907 |     - |     - |   9.21 KB |
+|   Decode | Core |    Core |     Decode | 3.171 us | 0.0166 us | 0.0155 us |  0.56 | 0.3395 |     - |     - |   1.05 KB |

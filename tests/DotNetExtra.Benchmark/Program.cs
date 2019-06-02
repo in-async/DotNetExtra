@@ -42,9 +42,21 @@ namespace Inasync.Benchmark {
         }
 
         [BenchmarkCategory("Encode"), Benchmark(Baseline = true)]
+        public string EncodeV1() => Base64UrlV1.Encode(_bytes);
+
+        [BenchmarkCategory("Encode"), Benchmark]
+        public string EncodeV2() => Base64UrlV2.Encode(_bytes);
+
+        [BenchmarkCategory("Encode"), Benchmark]
         public string Encode() => Base64Url.Encode(_bytes);
 
         [BenchmarkCategory("Decode"), Benchmark(Baseline = true)]
+        public byte[] DecodeV1() => Base64UrlV1.Decode(_encoded);
+
+        [BenchmarkCategory("Decode"), Benchmark]
+        public byte[] DecodeV2() => Base64UrlV2.Decode(_encoded);
+
+        [BenchmarkCategory("Decode"), Benchmark]
         public byte[] Decode() => Base64Url.Decode(_encoded);
     }
 }

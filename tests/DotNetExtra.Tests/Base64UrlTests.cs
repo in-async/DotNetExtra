@@ -16,11 +16,14 @@ namespace Inasync.Tests {
             }
 
             (int testNumber, byte[] bin, string expected, Type expectedExceptionType)[] TestCases() => new[]{
-                ( 0, null       , null , (Type)typeof(ArgumentNullException)),
-                (10, Bin()      , ""   , (Type)null),
-                (11, Bin(0)     , "AA" , (Type)null),
-                (12, Bin(250)   , "-g" , (Type)null),
-                (13, Bin(255, 0), "_wA", (Type)null),
+                ( 0, null              , null     , (Type)typeof(ArgumentNullException)),
+                (10, Bin()             , ""       , (Type)null),
+                (11, Bin(0)            , "AA"     , (Type)null),
+                (12, Bin(250)          , "-g"     , (Type)null),
+                (13, Bin(255, 0)       , "_wA"    , (Type)null),
+                (14, Bin(0, 1, 2, 3)   , "AAECAw" , (Type)null),
+                (15, Bin(0, 1, 2, 3, 4), "AAECAwQ", (Type)null),
+                (20, Bin(0x92, 0x4F, 0xBF, 0x8D, 0xC2), "kk-_jcI", (Type)null),
             };
         }
 
@@ -33,12 +36,16 @@ namespace Inasync.Tests {
             }
 
             (int testNumber, string encoded, byte[] expected, Type expectedExceptionType)[] TestCases() => new[]{
-                ( 0, null , null       , (Type)typeof(ArgumentNullException)),
-                ( 1, "@"  , null       , (Type)typeof(FormatException)),
-                (10, ""   , Bin()      , (Type)null),
-                (11, "AA" , Bin(0)     , (Type)null),
-                (12, "-g" , Bin(250)   , (Type)null),
-                (13, "_wA", Bin(255, 0), (Type)null),
+                ( 0, null     , null              , (Type)typeof(ArgumentNullException)),
+                ( 1, "@"      , null              , (Type)typeof(FormatException)),
+                ( 2, "@@"     , null              , (Type)typeof(FormatException)),
+                (10, ""       , Bin()             , (Type)null),
+                (11, "AA"     , Bin(0)            , (Type)null),
+                (12, "-g"     , Bin(250)          , (Type)null),
+                (13, "_wA"    , Bin(255, 0)       , (Type)null),
+                (14, "AAECAw" , Bin(0, 1, 2, 3)   , (Type)null),
+                (15, "AAECAwQ", Bin(0, 1, 2, 3, 4), (Type)null),
+                (20, "kk-_jcI", Bin(0x92, 0x4F, 0xBF, 0x8D, 0xC2), (Type)null),
             };
         }
 
