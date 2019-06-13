@@ -4,7 +4,7 @@ namespace Inasync {
 
     /// <summary>
     /// base64url のエンコード及びデコードを行うクラス。
-    /// https://tools.ietf.org/html/rfc4648#page-7
+    /// https://tools.ietf.org/html/rfc4648#section-5
     /// </summary>
     public static class Base64Url {
 
@@ -23,16 +23,16 @@ namespace Inasync {
         }
 
         /// <summary>
-        /// base64url でエンコードされた文字列をデコードします。
+        /// base64url 文字列を <see cref="byte"/> 配列にデコードします。
         /// </summary>
-        /// <param name="encoded">base64url エンコードされた文字列。</param>
+        /// <param name="encoded">base64url にエンコードされた文字列。</param>
         /// <returns>デコード後の <see cref="byte"/> 配列。</returns>
         /// <exception cref="ArgumentNullException"><paramref name="encoded"/> is <c>null</c>.</exception>
-        /// <exception cref="FormatException"><paramref name="encoded"/> が base64url エンコード文字列ではありません。</exception>
+        /// <exception cref="FormatException"><paramref name="encoded"/> が base64url 文字列ではありません。</exception>
         public static byte[] Decode(string encoded) {
             if (encoded == null) { throw new ArgumentNullException(nameof(encoded)); }
 
-            if (!TryDecode(encoded, out var result)) { throw new FormatException("base64url でエンコードされた文字列ではありません。"); }
+            if (!TryDecode(encoded, out var result)) { throw new FormatException("base64url 文字列ではありません。"); }
             return result;
         }
 

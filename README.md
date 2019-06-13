@@ -1,4 +1,4 @@
-# .NET Extra
+﻿# .NET Extra
 [![Build status](https://ci.appveyor.com/api/projects/status/18guum32xluunws0/branch/master?svg=true)](https://ci.appveyor.com/project/inasync/dotnetextra/branch/master)
 [![NuGet](https://img.shields.io/nuget/v/Inasync.DotNetExtra.svg)](https://www.nuget.org/packages/Inasync.DotNetExtra/)
 
@@ -19,8 +19,8 @@
 ## APIs
 | Type                           | Description |
 | ---                            | ---         |
-| Base64Url                      | [base64url](https://tools.ietf.org/html/rfc4648#page-7) のエンコード及びデコードを行うクラス。 |
-| Binary                         | `byte` 配列と 16 進文字列の相互変換を行うクラス。 |
+| Base16                         | [base16](https://tools.ietf.org/html/rfc4648#section-8) のエンコード及びデコードを行うクラス。 |
+| Base64Url                      | [base64url](https://tools.ietf.org/html/rfc4648#section-5) のエンコード及びデコードを行うクラス。 |
 
 
 ## Licence
