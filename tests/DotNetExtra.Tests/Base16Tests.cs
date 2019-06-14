@@ -30,6 +30,33 @@ namespace Inasync.Tests {
         }
 
         [TestMethod]
+        public void Encode_Range() {
+            Action TestCase(int testNumber, byte[] bytes, int offset, int length, bool toUpper, string expected, Type expectedExceptionType = null) => () => {
+                new TestCaseRunner($"No.{testNumber}")
+                    .Run(() => Base16.Encode(bytes, offset, length, toUpper))
+                    .Verify(expected, expectedExceptionType);
+            };
+
+            var rndBytes = Rand.Bytes();
+            new[]{
+                TestCase( 0, null                                          , 0 , 0              , false, null              , typeof(ArgumentNullException)),
+                TestCase( 1, Bytes()                                       , 0 , 0              , false, ""                ),
+                TestCase( 2, Bytes(0x0f)                                   , 0 , 1              , false, "0f"              ),
+                TestCase( 3, Bytes(0x0f,0xf0)                              , 0 , 2              , false, "0ff0"            ),
+                TestCase( 4, Bytes(0x0f,0xf0)                              , 0 , 2              , true , "0FF0"            ),
+                TestCase(10, Bytes(0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef), 0 , 8              , false, "0123456789abcdef"),
+                TestCase(11, Bytes(0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef), 0 , 8              , true , "0123456789ABCDEF"),
+                TestCase(20, Bytes(0x0f,0xf0)                              , -1, 0              , true , null              , typeof(ArgumentOutOfRangeException)),
+                TestCase(21, Bytes(0x0f,0xf0)                              , 0 , -1             , true , null              , typeof(ArgumentOutOfRangeException)),
+                TestCase(22, Bytes(0x0f,0xf0)                              , 2 , 0              , true , ""                ),
+                TestCase(23, Bytes(0x0f,0xf0)                              , 1 , 1              , true , "F0"              ),
+                TestCase(24, Bytes(0x0f,0xf0)                              , 1 , 2              , true , null              , typeof(ArgumentOutOfRangeException)),
+                TestCase(50, rndBytes                                      , 0 , rndBytes.Length, false, BitConverter.ToString(rndBytes).Replace("-", "").ToLowerInvariant()),
+                TestCase(51, rndBytes                                      , 0 , rndBytes.Length, true , BitConverter.ToString(rndBytes).Replace("-", "").ToUpperInvariant()),
+            }.Run();
+        }
+
+        [TestMethod]
         public void Decode() {
             Action TestCase(int testNumber, string hexString, byte[] expected, Type expectedExceptionType = null) => () => {
                 new TestCaseRunner($"No.{testNumber}")

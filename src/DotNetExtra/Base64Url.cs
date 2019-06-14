@@ -11,11 +11,29 @@ namespace Inasync {
         /// <summary>
         /// <see cref="byte"/> 配列を base64url にエンコードします。
         /// </summary>
-        /// <param name="bin">エンコード対象の <see cref="byte"/> 配列。</param>
+        /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
         /// <returns>base64url エンコード文字列。</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="bin"/> is <c>null</c>.</exception>
-        public static string Encode(byte[] bin) {
-            return Convert.ToBase64String(bin)
+        /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
+        public static string Encode(byte[] bytes) {
+            if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
+
+            return Encode(bytes, 0, bytes.Length);
+        }
+
+        /// <summary>
+        /// <see cref="byte"/> 配列を base64url にエンコードします。
+        /// </summary>
+        /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
+        /// <param name="offset">エンコードの開始位置を示すオフセット。</param>
+        /// <param name="length">エンコード対象の要素の数。</param>
+        /// <returns>base64url エンコード文字列。</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="offset"/> または <paramref name="length"/> が負の値です。
+        /// または <paramref name="offset"/> と <paramref name="length"/> を加算した値が <paramref name="bytes"/> の長さを超えています。
+        /// </exception>
+        public static string Encode(byte[] bytes, int offset, int length) {
+            return Convert.ToBase64String(bytes, offset, length)
                 .TrimEnd('=')
                 .Replace('+', '-')
                 .Replace('/', '_')

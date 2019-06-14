@@ -25,6 +25,28 @@ namespace Inasync.Tests {
         }
 
         [TestMethod]
+        public void Encode_Range() {
+            Action TestCase(int testNumber, byte[] bin, int offset, int length, string expected, Type expectedExceptionType = null) => () => {
+                new TestCaseRunner($"No.{testNumber}")
+                    .Run(() => Base64Url.Encode(bin, offset, length))
+                    .Verify(expected, expectedExceptionType);
+            };
+
+            new[]{
+                TestCase( 0, null       , 0 , 0 , null , typeof(ArgumentNullException)),
+                TestCase(10, Bin()      , 0 , 0 , ""   ),
+                TestCase(11, Bin(0)     , 0 , 1 , "AA" ),
+                TestCase(12, Bin(250)   , 0 , 1 , "-g" ),
+                TestCase(13, Bin(255, 0), 0 , 2 , "_wA"),
+                TestCase(20, Bin(255, 9), -1, 0 , null, typeof(ArgumentOutOfRangeException)),
+                TestCase(21, Bin(255, 9), 0 , -1, null, typeof(ArgumentOutOfRangeException)),
+                TestCase(22, Bin(255, 9), 2 , 0 , ""  ),
+                TestCase(23, Bin(255, 9), 1 , 1 , "CQ"),
+                TestCase(24, Bin(255, 9), 1 , 2 , null, typeof(ArgumentOutOfRangeException)),
+            }.Run();
+        }
+
+        [TestMethod]
         public void Decode() {
             foreach (var item in TestCases()) {
                 new TestCaseRunner($"No.{item.testNumber}")
