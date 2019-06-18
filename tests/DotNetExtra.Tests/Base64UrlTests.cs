@@ -8,6 +8,23 @@ namespace Inasync.Tests {
     public class Base64UrlTests {
 
         [TestMethod]
+        public void Encode_Obsoleted() {
+            Action TestCase(int testNumber, byte[] bytes, string expected, Type expectedExceptionType = null) => () => {
+                new TestCaseRunner($"No.{testNumber}")
+                    .Run(() => Base64Url.Encode(bytes))
+                    .Verify(expected, expectedExceptionType);
+            };
+
+            new[]{
+                TestCase( 0, null       , null  , typeof(ArgumentNullException)),
+                TestCase(10, Bin()      , ""    ),
+                TestCase(11, Bin(0)     , "AA"  ),
+                TestCase(12, Bin(250)   , "-g"  ),
+                TestCase(13, Bin(255, 0), "_wA" ),
+            }.Run();
+        }
+
+        [TestMethod]
         public void Encode() {
             Action TestCase(int testNumber, byte[] bytes, bool padding, string expected, Type expectedExceptionType = null) => () => {
                 new TestCaseRunner($"No.{testNumber}")

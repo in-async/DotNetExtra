@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/in-async/DotNetExtra</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/in-async/DotNetExtra/blob/master/LICENSE</PackageLicenseUrl>
     <PackageTags>library</PackageTags>
-    <Version>1.3.0</Version>
+    <Version>1.3.1</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 

@@ -10,6 +10,16 @@ namespace Inasync {
 
         /// <summary>
         /// <see cref="byte"/> 配列を base64url にエンコードします。
+        /// パディングは省略します。
+        /// </summary>
+        /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
+        /// <returns>base64url エンコード文字列。</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
+        [Obsolete]
+        public static string Encode(byte[] bytes) => Encode(bytes, padding: false);
+
+        /// <summary>
+        /// <see cref="byte"/> 配列を base64url にエンコードします。
         /// </summary>
         /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
         /// <param name="padding">パディングをする場合は <c>true</c>、それ以外は <c>false</c>。既定値は <c>false</c>。</param>
