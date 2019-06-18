@@ -15,7 +15,6 @@ namespace Inasync {
         /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
         /// <returns>base64url エンコード文字列。</returns>
         /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
-        [Obsolete]
         public static string Encode(byte[] bytes) => Encode(bytes, padding: false);
 
         /// <summary>
