@@ -5,7 +5,7 @@ namespace Inasync {
 
     /// <summary>
     /// base64url のエンコード及びデコードを行うクラス。
-    /// https://tools.ietf.org/html/rfc4648#page-7
+    /// https://tools.ietf.org/html/rfc4648#section-5
     /// </summary>
     public static class Base64Url {
         private const string _base64UrlChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -24,33 +24,56 @@ namespace Inasync {
         /// <summary>
         /// <see cref="byte"/> 配列を base64url にエンコードします。
         /// </summary>
-        /// <param name="bin">エンコード対象の <see cref="byte"/> 配列。</param>
+        /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
+        /// <param name="padding">パディングをする場合は <c>true</c>、それ以外は <c>false</c>。既定値は <c>false</c>。</param>
         /// <returns>base64url エンコード文字列。</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="bin"/> is <c>null</c>.</exception>
-        public static string Encode(byte[] bin) {
-            if (bin == null) { throw new ArgumentNullException(nameof(bin)); }
-            if (bin.Length == 0) { return ""; }
+        /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
+        public static string Encode(byte[] bytes, bool padding = false) {
+            if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
 
-            var chars = new char[bin.Length * 4 / 3 + 1];
+            return Encode(bytes, 0, bytes.Length, padding);
+        }
+
+        /// <summary>
+        /// <see cref="byte"/> 配列を base64url にエンコードします。
+        /// </summary>
+        /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
+        /// <param name="offset">エンコードの開始位置を示すオフセット。</param>
+        /// <param name="length">エンコード対象の要素の数。</param>
+        /// <param name="padding">パディングをする場合は <c>true</c>、それ以外は <c>false</c>。既定値は <c>false</c>。</param>
+        /// <returns>base64url エンコード文字列。</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="offset"/> または <paramref name="length"/> が負の値です。
+        /// または <paramref name="offset"/> と <paramref name="length"/> を加算した値が <paramref name="bytes"/> の長さを超えています。
+        /// </exception>
+        public static string Encode(byte[] bytes, int offset, int length, bool padding = false) {
+            if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
+            if (offset < 0) { throw new ArgumentOutOfRangeException(nameof(offset), offset, null); }
+            if (length < 0) { throw new ArgumentOutOfRangeException(nameof(length), length, null); }
+            if (offset + length > bytes.Length) { throw new ArgumentOutOfRangeException($"{nameof(offset)} と {nameof(length)} を加算した値が {nameof(bytes)} の長さを超えています。"); }
+            if (bytes.Length == 0) { return ""; }
+
+            var chars = new char[length * 4 / 3 + 1];
             var charLen = 0;
-            for (var offset = 0; offset < bin.Length; offset += 3) {
-                switch (bin.Length - offset) {
+            for (; offset < length; offset += 3) {
+                switch (length - offset) {
                     case 1:
-                        chars[charLen++] = _base64UrlChars[bin[offset] >> 2];
-                        chars[charLen++] = _base64UrlChars[(bin[offset] & 0b0011) << 4];
+                        chars[charLen++] = _base64UrlChars[bytes[offset] >> 2];
+                        chars[charLen++] = _base64UrlChars[(bytes[offset] & 0b0011) << 4];
                         break;
 
                     case 2:
-                        chars[charLen++] = _base64UrlChars[bin[offset] >> 2];
-                        chars[charLen++] = _base64UrlChars[(bin[offset] & 0b0011) << 4 | bin[offset + 1] >> 4];
-                        chars[charLen++] = _base64UrlChars[(bin[offset + 1] & 0b1111) << 2];
+                        chars[charLen++] = _base64UrlChars[bytes[offset] >> 2];
+                        chars[charLen++] = _base64UrlChars[(bytes[offset] & 0b0011) << 4 | bytes[offset + 1] >> 4];
+                        chars[charLen++] = _base64UrlChars[(bytes[offset + 1] & 0b1111) << 2];
                         break;
 
                     default:
-                        chars[charLen++] = _base64UrlChars[bin[offset] >> 2];
-                        chars[charLen++] = _base64UrlChars[(bin[offset] & 0b0011) << 4 | bin[offset + 1] >> 4];
-                        chars[charLen++] = _base64UrlChars[(bin[offset + 1] & 0b1111) << 2 | bin[offset + 2] >> 6];
-                        chars[charLen++] = _base64UrlChars[bin[offset + 2] & 0b0011_1111];
+                        chars[charLen++] = _base64UrlChars[bytes[offset] >> 2];
+                        chars[charLen++] = _base64UrlChars[(bytes[offset] & 0b0011) << 4 | bytes[offset + 1] >> 4];
+                        chars[charLen++] = _base64UrlChars[(bytes[offset + 1] & 0b1111) << 2 | bytes[offset + 2] >> 6];
+                        chars[charLen++] = _base64UrlChars[bytes[offset + 2] & 0b0011_1111];
                         break;
                 }
             }
@@ -59,16 +82,16 @@ namespace Inasync {
         }
 
         /// <summary>
-        /// base64url でエンコードされた文字列をデコードします。
+        /// base64url 文字列を <see cref="byte"/> 配列にデコードします。
         /// </summary>
-        /// <param name="encoded">base64url エンコードされた文字列。</param>
+        /// <param name="encoded">base64url にエンコードされた文字列。</param>
         /// <returns>デコード後の <see cref="byte"/> 配列。</returns>
         /// <exception cref="ArgumentNullException"><paramref name="encoded"/> is <c>null</c>.</exception>
-        /// <exception cref="FormatException"><paramref name="encoded"/> が base64url エンコード文字列ではありません。</exception>
+        /// <exception cref="FormatException"><paramref name="encoded"/> が base64url 文字列ではありません。</exception>
         public static byte[] Decode(string encoded) {
             if (encoded == null) { throw new ArgumentNullException(nameof(encoded)); }
 
-            if (!TryDecode(encoded, out var result)) { throw new FormatException("base64url でエンコードされた文字列ではありません。"); }
+            if (!TryDecode(encoded, out var result)) { throw new FormatException("base64url 文字列ではありません。"); }
             return result;
         }
 
