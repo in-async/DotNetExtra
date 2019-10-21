@@ -79,10 +79,7 @@ namespace Inasync {
         public static bool TryDecode(string encoded, out byte[] result) {
             if (encoded == null) { goto Failure; }
 
-            var paddingLen = encoded.Length % 4;
-            if (paddingLen != 0) {
-                paddingLen = 4 - paddingLen;
-            }
+            var paddingLen = unchecked(~encoded.Length + 1) & 0b11;
 
             var base64Str = encoded
                 .Replace('-', '+')
