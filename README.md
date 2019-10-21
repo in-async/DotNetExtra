@@ -21,6 +21,7 @@
 | ---                            | ---         |
 | Base16                         | [base16](https://tools.ietf.org/html/rfc4648#section-8) のエンコード及びデコードを行うクラス。 |
 | Base64Url                      | [base64url](https://tools.ietf.org/html/rfc4648#section-5) のエンコード及びデコードを行うクラス。 |
+| HttpServerUtilityUrlToken      | [HttpServerUtility URL Token](https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokenencode) のエンコード及びデコードを行うクラス。 |
 
 
 ## Licence
