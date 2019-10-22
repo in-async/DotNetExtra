@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Inasync {
 
@@ -27,26 +28,20 @@ namespace Inasync {
         public static string Encode(byte[] bytes) {
             if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
 
-            return Encode(bytes, 0, bytes.Length);
+            return Encode(new ArraySegment<byte>(bytes));
         }
 
         /// <summary>
         /// <see cref="byte"/> 配列を HttpServerUtility URL Token にエンコードします。
         /// </summary>
         /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
-        /// <param name="offset">エンコードの開始位置を示すオフセット。</param>
-        /// <param name="length">エンコード対象の要素の数。</param>
-        /// <returns>HttpServerUtility URL Token エンコード文字列。<paramref name="length"/> が <c>0</c> の場合は空文字列を返します。</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="offset"/> または <paramref name="length"/> が負の値です。
-        /// または <paramref name="offset"/> と <paramref name="length"/> を加算した値が <paramref name="bytes"/> の長さを超えています。
-        /// </exception>
-        public static string Encode(byte[] bytes, int offset, int length) {
-            if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
+        /// <returns>HttpServerUtility URL Token エンコード文字列。<paramref name="bytes"/> の長さが <c>0</c> の場合は空文字列を返します。</returns>
+        public static string Encode(ArraySegment<byte> bytes) {
+            if (bytes.Count == 0) { return ""; }
+            Debug.Assert(bytes != default);
 
-            var encoded = Base64Url.Encode(bytes, offset, length, padding: false);
-            if (encoded.Length == 0) { return ""; }
+            var encoded = Base64Url.Encode(bytes, padding: false);
+            Debug.Assert(encoded.Length > 0);
 
             var paddingLen = unchecked(~encoded.Length + 1) & 0b11;
             encoded += paddingLen;

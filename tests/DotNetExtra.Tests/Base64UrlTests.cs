@@ -73,6 +73,29 @@ namespace Inasync.Tests {
         }
 
         [TestMethod]
+        public void Encode_ByteSegment() {
+            Action TestCase(int testNumber, ArraySegment<byte> bytes, bool padding, string expected, Type expectedExceptionType = null) => () => {
+                new TestCaseRunner($"No.{testNumber}")
+                    .Run(() => Base64Url.Encode(bytes, padding))
+                    .Verify(expected, expectedExceptionType);
+            };
+
+            new[]{
+                TestCase(10, default         , padding: false, expected: ""    ),
+                TestCase(11, Bin()           , padding: false, expected: ""    ),
+                TestCase(12, Bin(0)          , padding: false, expected: "AA"  ),
+                TestCase(13, Bin(0, 255)     , padding: false, expected: "AP8" ),
+                TestCase(14, Bin(0, 255, 254), padding: false, expected: "AP_-"),
+
+                TestCase(20, default         , padding: true , expected: ""    ),
+                TestCase(21, Bin()           , padding: true , expected: ""    ),
+                TestCase(22, Bin(0)          , padding: true , expected: "AA=="),
+                TestCase(23, Bin(0, 255)     , padding: true , expected: "AP8="),
+                TestCase(24, Bin(0, 255, 254), padding: true , expected: "AP_-"),
+            }.Run();
+        }
+
+        [TestMethod]
         public void Decode() {
             foreach (var item in TestCases()) {
                 new TestCaseRunner($"No.{item.testNumber}")
