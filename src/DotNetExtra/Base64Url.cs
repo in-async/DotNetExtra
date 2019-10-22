@@ -16,6 +16,7 @@ namespace Inasync {
         /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
         /// <returns>base64url エンコード文字列。</returns>
         /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
+        /// <remarks>v2.0 で削除予定 (cf. c391dac2631c061ac36f0eb2736c8e1b83bf4e6e)</remarks>
         public static string Encode(byte[] bytes) => Encode(bytes, padding: false);
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Inasync {
             if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
             if (offset < 0) { throw new ArgumentOutOfRangeException(nameof(offset), offset, $"{nameof(offset)} が負の値です。"); }
             if (length < 0) { throw new ArgumentOutOfRangeException(nameof(length), length, $"{nameof(length)} が負の値です。"); }
-            if (bytes.Length < offset + length) { throw new ArgumentOutOfRangeException(message: $"{nameof(offset)} と ${nameof(length)} の和が ${nameof(bytes)} の長さを超えています。", innerException: null); }
+            if (offset + length > bytes.Length) { throw new ArgumentOutOfRangeException(message: $"{nameof(offset)} と ${nameof(length)} の和が ${nameof(bytes)} の長さを超えています。", innerException: null); }
 
             return Encode(new ArraySegment<byte>(bytes, offset, length), padding);
         }

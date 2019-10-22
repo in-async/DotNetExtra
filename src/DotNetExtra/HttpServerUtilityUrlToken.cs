@@ -5,18 +5,18 @@ namespace Inasync {
 
     /// <summary>
     /// HttpServerUtility URL Token のエンコード及びデコードを行うクラス。
-    /// https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokenencode
-    /// https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokendecode
     /// </summary>
     /// <remarks>
     /// HttpServerUtility URL Token 形式は、パディング無し base64url にパディング数を文字として追記した文字列です。
     /// 例えば、<c>0x00</c> は <c>AA2</c> になります。
+    /// https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokenencode
+    /// https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokendecode
     /// </remarks>
     public static class HttpServerUtilityUrlToken {
 #if NETSTANDARD2_0
-        private static readonly byte[] EmptyBytes = Array.Empty<byte>();
+        private static readonly byte[] _emptyBytes = Array.Empty<byte>();
 #else
-        private static readonly byte[] EmptyBytes = new byte[0];
+        private static readonly byte[] _emptyBytes = new byte[0];
 #endif
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Inasync {
         public static bool TryDecode(string encoded, out byte[] result) {
             if (encoded == null) { goto Failure; }
             if (encoded.Length == 0) {
-                result = EmptyBytes;
+                result = _emptyBytes;
                 return true;
             }
 
