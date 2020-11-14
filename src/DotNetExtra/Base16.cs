@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace Inasync {
@@ -19,7 +20,7 @@ namespace Inasync {
         public static string Encode(byte[] bytes, bool toUpper = false) {
             if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
 
-            return Encode(bytes, 0, bytes.Length, toUpper);
+            return Encode(new ArraySegment<byte>(bytes), toUpper);
         }
 
         /// <summary>
@@ -35,18 +36,36 @@ namespace Inasync {
         /// <paramref name="offset"/> または <paramref name="length"/> が負の値です。
         /// または <paramref name="offset"/> と <paramref name="length"/> を加算した値が <paramref name="bytes"/> の長さを超えています。
         /// </exception>
+        [Obsolete]
         public static string Encode(byte[] bytes, int offset, int length, bool toUpper = false) {
             if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
             if (offset < 0) { throw new ArgumentOutOfRangeException(nameof(offset), offset, "offset が負の値です。"); }
             if (length < 0) { throw new ArgumentOutOfRangeException(nameof(length), length, "length が負の値です。"); }
             if (bytes.Length < offset + length) { throw new ArgumentOutOfRangeException("offset と length を加算した値が bytes の長さを超えています。"); }
 
+            return Encode(new ArraySegment<byte>(bytes, offset, length), toUpper);
+        }
+
+        /// <summary>
+        /// <see cref="byte"/> 配列を base16 にエンコードします。
+        /// </summary>
+        /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
+        /// <param name="toUpper">エンコード後の 16 進文字列を大文字にする場合は <c>true</c>、それ以外は <c>false</c>。</param>
+        /// <returns>エンコード後の base16 文字列。</returns>
+        public static string Encode(ArraySegment<byte> bytes, bool toUpper = false) {
+            if (bytes.Count == 0) { return ""; }
+            Debug.Assert(bytes != default);
+
+            var byteArray = bytes.Array;
+            var offset = bytes.Offset;
+            var length = bytes.Count;
+
             var format = toUpper ? "X2" : "x2";
             var numberFormatInfo = CultureInfo.InvariantCulture.NumberFormat;
             var chars = new Char[length * 2];
 
             for (int bi = offset, ci = 0; bi < offset + length; bi++, ci += 2) {
-                var str = bytes[bi].ToString(format, numberFormatInfo);
+                var str = byteArray[bi].ToString(format, numberFormatInfo);
 
                 chars[ci] = str[0];
                 chars[ci + 1] = str[1];

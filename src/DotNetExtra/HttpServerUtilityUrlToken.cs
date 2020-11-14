@@ -1,21 +1,22 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Inasync {
 
     /// <summary>
     /// HttpServerUtility URL Token のエンコード及びデコードを行うクラス。
-    /// https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokenencode
-    /// https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokendecode
     /// </summary>
     /// <remarks>
     /// HttpServerUtility URL Token 形式は、パディング無し base64url にパディング数を文字として追記した文字列です。
     /// 例えば、<c>0x00</c> は <c>AA2</c> になります。
+    /// https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokenencode
+    /// https://docs.microsoft.com/ja-jp/dotnet/api/system.web.httpserverutility.urltokendecode
     /// </remarks>
     public static class HttpServerUtilityUrlToken {
 #if NETSTANDARD2_0
-        private static readonly byte[] EmptyBytes = Array.Empty<byte>();
+        private static readonly byte[] _emptyBytes = Array.Empty<byte>();
 #else
-        private static readonly byte[] EmptyBytes = new byte[0];
+        private static readonly byte[] _emptyBytes = new byte[0];
 #endif
 
         /// <summary>
@@ -27,26 +28,20 @@ namespace Inasync {
         public static string Encode(byte[] bytes) {
             if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
 
-            return Encode(bytes, 0, bytes.Length);
+            return Encode(new ArraySegment<byte>(bytes));
         }
 
         /// <summary>
         /// <see cref="byte"/> 配列を HttpServerUtility URL Token にエンコードします。
         /// </summary>
         /// <param name="bytes">エンコード対象の <see cref="byte"/> 配列。</param>
-        /// <param name="offset">エンコードの開始位置を示すオフセット。</param>
-        /// <param name="length">エンコード対象の要素の数。</param>
-        /// <returns>HttpServerUtility URL Token エンコード文字列。<paramref name="length"/> が <c>0</c> の場合は空文字列を返します。</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="offset"/> または <paramref name="length"/> が負の値です。
-        /// または <paramref name="offset"/> と <paramref name="length"/> を加算した値が <paramref name="bytes"/> の長さを超えています。
-        /// </exception>
-        public static string Encode(byte[] bytes, int offset, int length) {
-            if (bytes == null) { throw new ArgumentNullException(nameof(bytes)); }
+        /// <returns>HttpServerUtility URL Token エンコード文字列。<paramref name="bytes"/> の長さが <c>0</c> の場合は空文字列を返します。</returns>
+        public static string Encode(ArraySegment<byte> bytes) {
+            if (bytes.Count == 0) { return ""; }
+            Debug.Assert(bytes != default);
 
-            var encoded = Base64Url.Encode(bytes, offset, length, padding: false);
-            if (encoded.Length == 0) { return ""; }
+            var encoded = Base64Url.Encode(bytes, padding: false);
+            Debug.Assert(encoded.Length > 0);
 
             var paddingLen = unchecked(~encoded.Length + 1) & 0b11;
             encoded += paddingLen;
@@ -77,7 +72,7 @@ namespace Inasync {
         public static bool TryDecode(string encoded, out byte[] result) {
             if (encoded == null) { goto Failure; }
             if (encoded.Length == 0) {
-                result = EmptyBytes;
+                result = _emptyBytes;
                 return true;
             }
 

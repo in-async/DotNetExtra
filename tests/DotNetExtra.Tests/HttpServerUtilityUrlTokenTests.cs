@@ -25,25 +25,19 @@ namespace Inasync.Tests {
         }
 
         [TestMethod]
-        public void Encode_Range() {
-            Action TestCase(int testNumber, byte[] bin, int offset, int length, string expected, Type expectedExceptionType = null) => () => {
+        public void Encode_ByteSegment() {
+            Action TestCase(int testNumber, ArraySegment<byte> bytes, string expected, Type expectedExceptionType = null) => () => {
                 new TestCaseRunner($"No.{testNumber}")
-                    .Run(() => HttpServerUtilityUrlToken.Encode(bin, offset, length))
+                    .Run(() => HttpServerUtilityUrlToken.Encode(bytes))
                     .Verify(expected, expectedExceptionType);
             };
 
             new[]{
-                TestCase( 0, null            , 0 , 0 , null   , typeof(ArgumentNullException)),
-                TestCase(10, Bin()           , 0 , 0 , ""     ),
-                TestCase(11, Bin(0)          , 0 , 1 , "AA2"  ),
-                TestCase(12, Bin(0, 255)     , 0 , 2 , "AP81" ),
-                TestCase(13, Bin(0, 255, 254), 0 , 3 , "AP_-0"),
-
-                TestCase(20, Bin(0, 255, 254), -1, 0 , null   , typeof(ArgumentOutOfRangeException)),
-                TestCase(21, Bin(0, 255, 254), 0 , -1, null   , typeof(ArgumentOutOfRangeException)),
-                TestCase(22, Bin(0, 255, 254), 0 , 0 , ""     ),
-                TestCase(23, Bin(0, 255, 254), 0 , 1 , "AA2"  ),
-                TestCase(24, Bin(0, 255, 254), 4 , 0 , null   , typeof(ArgumentOutOfRangeException)),
+                TestCase(10, default           , ""     ),
+                TestCase(11, ByteS()           , ""     ),
+                TestCase(12, ByteS(0)          , "AA2"  ),
+                TestCase(13, ByteS(0, 255)     , "AP81" ),
+                TestCase(14, ByteS(0, 255, 254), "AP_-0"),
             }.Run();
         }
 
@@ -91,6 +85,8 @@ namespace Inasync.Tests {
         #region Helper
 
         private static byte[] Bin(params byte[] bin) => bin;
+
+        private static ArraySegment<byte> ByteS(params byte[] bytes) => new ArraySegment<byte>(bytes);
 
         #endregion Helper
     }

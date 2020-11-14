@@ -57,6 +57,25 @@ namespace Inasync.Tests {
         }
 
         [TestMethod]
+        public void Encode_ByteSegment() {
+            Action TestCase(int testNumber, ArraySegment<byte> bytes, bool toUpper, string expected, Type expectedExceptionType = null) => () => {
+                new TestCaseRunner($"No.{testNumber}")
+                    .Run(() => Base16.Encode(bytes, toUpper))
+                    .Verify(expected, expectedExceptionType);
+            };
+
+            var rndBytes = Rand.Bytes();
+            new[]{
+                TestCase( 0, default         , toUpper: false, expected: ""    ),
+                TestCase( 1, ByteS()         , toUpper: false, expected: ""    ),
+                TestCase( 2, ByteS(0x0f,0xe1), toUpper: false, expected: "0fe1"),
+                TestCase( 3, ByteS(0x0f,0xe1), toUpper: true , expected: "0FE1"),
+                TestCase(50, ByteS(rndBytes) , toUpper: false, expected: BitConverter.ToString(rndBytes).Replace("-", "").ToLowerInvariant()),
+                TestCase(51, ByteS(rndBytes) , toUpper: true , expected: BitConverter.ToString(rndBytes).Replace("-", "").ToUpperInvariant()),
+            }.Run();
+        }
+
+        [TestMethod]
         public void Decode() {
             Action TestCase(int testNumber, string hexString, byte[] expected, Type expectedExceptionType = null) => () => {
                 new TestCaseRunner($"No.{testNumber}")
@@ -105,6 +124,8 @@ namespace Inasync.Tests {
         #region Helpers
 
         private static byte[] Bytes(params byte[] bytes) => bytes;
+
+        private static ArraySegment<byte> ByteS(params byte[] bytes) => new ArraySegment<byte>(bytes);
 
         #endregion Helpers
     }
