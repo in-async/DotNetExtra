@@ -67,11 +67,11 @@ namespace Inasync.Tests {
             var rndBytes = Rand.Bytes();
             new[]{
                 TestCase( 0, default         , toUpper: false, expected: ""    ),
-                TestCase( 1, Bytes()         , toUpper: false, expected: ""    ),
-                TestCase( 2, Bytes(0x0f,0xe1), toUpper: false, expected: "0fe1"),
-                TestCase( 3, Bytes(0x0f,0xe1), toUpper: true , expected: "0FE1"),
-                TestCase(50, rndBytes        , toUpper: false, expected: BitConverter.ToString(rndBytes).Replace("-", "").ToLowerInvariant()),
-                TestCase(51, rndBytes        , toUpper: true , expected: BitConverter.ToString(rndBytes).Replace("-", "").ToUpperInvariant()),
+                TestCase( 1, ByteS()         , toUpper: false, expected: ""    ),
+                TestCase( 2, ByteS(0x0f,0xe1), toUpper: false, expected: "0fe1"),
+                TestCase( 3, ByteS(0x0f,0xe1), toUpper: true , expected: "0FE1"),
+                TestCase(50, ByteS(rndBytes) , toUpper: false, expected: BitConverter.ToString(rndBytes).Replace("-", "").ToLowerInvariant()),
+                TestCase(51, ByteS(rndBytes) , toUpper: true , expected: BitConverter.ToString(rndBytes).Replace("-", "").ToUpperInvariant()),
             }.Run();
         }
 
@@ -124,6 +124,8 @@ namespace Inasync.Tests {
         #region Helpers
 
         private static byte[] Bytes(params byte[] bytes) => bytes;
+
+        private static ArraySegment<byte> ByteS(params byte[] bytes) => new ArraySegment<byte>(bytes);
 
         #endregion Helpers
     }

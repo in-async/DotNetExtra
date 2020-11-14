@@ -81,17 +81,17 @@ namespace Inasync.Tests {
             };
 
             new[]{
-                TestCase(10, default         , padding: false, expected: ""    ),
-                TestCase(11, Bin()           , padding: false, expected: ""    ),
-                TestCase(12, Bin(0)          , padding: false, expected: "AA"  ),
-                TestCase(13, Bin(0, 255)     , padding: false, expected: "AP8" ),
-                TestCase(14, Bin(0, 255, 254), padding: false, expected: "AP_-"),
+                TestCase(10, default           , padding: false, expected: ""    ),
+                TestCase(11, ByteS()           , padding: false, expected: ""    ),
+                TestCase(12, ByteS(0)          , padding: false, expected: "AA"  ),
+                TestCase(13, ByteS(0, 255)     , padding: false, expected: "AP8" ),
+                TestCase(14, ByteS(0, 255, 254), padding: false, expected: "AP_-"),
 
-                TestCase(20, default         , padding: true , expected: ""    ),
-                TestCase(21, Bin()           , padding: true , expected: ""    ),
-                TestCase(22, Bin(0)          , padding: true , expected: "AA=="),
-                TestCase(23, Bin(0, 255)     , padding: true , expected: "AP8="),
-                TestCase(24, Bin(0, 255, 254), padding: true , expected: "AP_-"),
+                TestCase(20, default           , padding: true , expected: ""    ),
+                TestCase(21, ByteS()           , padding: true , expected: ""    ),
+                TestCase(22, ByteS(0)          , padding: true , expected: "AA=="),
+                TestCase(23, ByteS(0, 255)     , padding: true , expected: "AP8="),
+                TestCase(24, ByteS(0, 255, 254), padding: true , expected: "AP_-"),
             }.Run();
         }
 
@@ -137,6 +137,8 @@ namespace Inasync.Tests {
         #region Helper
 
         private static byte[] Bin(params byte[] bin) => bin;
+
+        private static ArraySegment<byte> ByteS(params byte[] bytes) => new ArraySegment<byte>(bytes);
 
         #endregion Helper
     }

@@ -33,11 +33,11 @@ namespace Inasync.Tests {
             };
 
             new[]{
-                TestCase(10, default         , ""     ),
-                TestCase(11, Bin()           , ""     ),
-                TestCase(12, Bin(0)          , "AA2"  ),
-                TestCase(13, Bin(0, 255)     , "AP81" ),
-                TestCase(14, Bin(0, 255, 254), "AP_-0"),
+                TestCase(10, default           , ""     ),
+                TestCase(11, ByteS()           , ""     ),
+                TestCase(12, ByteS(0)          , "AA2"  ),
+                TestCase(13, ByteS(0, 255)     , "AP81" ),
+                TestCase(14, ByteS(0, 255, 254), "AP_-0"),
             }.Run();
         }
 
@@ -85,6 +85,8 @@ namespace Inasync.Tests {
         #region Helper
 
         private static byte[] Bin(params byte[] bin) => bin;
+
+        private static ArraySegment<byte> ByteS(params byte[] bytes) => new ArraySegment<byte>(bytes);
 
         #endregion Helper
     }
