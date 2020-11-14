@@ -16,6 +16,6 @@ deploy:
     appveyor_repo_tag: true
 - provider: NuGet
   api_key:
-    secure: YDqMLmNrdBgJpslJ6AfFf25Kt6OSblR5I6cWcTARVCDkWLr7VhYPC7BAw2iK1oU5
+    secure: iKmcSMqa3TyAhnZ+uggJSWXb3Pl7po5GPhypi0Ajwhhq+KgetojB8eiFqv8Qn7jU
   on:
     appveyor_repo_tag: true
